@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import TodoListTemplate from './components/TodoListTemplate';
 import Form from './components/Form';
 import TodoItemList from './components/TodoItemList';
+import Palette from './components/Palette';
+
+
+const colors = ['#343a40', '#f03e3e', '#12b886', '#228ae6'];
 
 class App extends Component {
 
@@ -12,7 +16,8 @@ class App extends Component {
       { id: 0, text: 'react intro', checked: false},
       { id: 1, text: 'react intro', checked: true},
       { id: 2, text: 'react intro', checked: false}
-    ]
+    ],
+    color:'#343a40'
   };
 
   handleChange = (e) => {
@@ -22,13 +27,14 @@ class App extends Component {
   }
 
   handleCreate = () => {
-    const {input, todos} = this.state;
+    const {input, todos, color} = this.state;
     this.setState({
       input:'',
       todos: todos.concat({
         id: this.id++,
         text: input,
-        checked: false
+        checked: false,
+        color
       })
     });
   }
@@ -65,16 +71,23 @@ class App extends Component {
     });
   }
 
+  handleSelectColor = (color) => {
+    this.setState({
+      color
+    })
+  }
+
   render() {
 
     //this binding for jsx
-    const { input, todos } = this.state;
+    const { input, todos, color } = this.state;
     const {
       handleChange,
       handleCreate,
       handleKeyPress,
       handleToggle,
-      handleRemove
+      handleRemove,
+      handleSelectColor
     } = this;
 
     return (
@@ -84,8 +97,11 @@ class App extends Component {
           onKeyPress = {handleKeyPress}
           onChange = {handleChange}
           onCreate = {handleCreate}
+          color={color}
         />
-      )}>
+      )}
+      palette={(<Palette colors={colors} selected={color} onSelect={handleSelectColor}/>)} 
+      >
         <TodoItemList todos={todos} onToggle={handleToggle} onRemove={handleRemove}/>
       </TodoListTemplate>
     );
